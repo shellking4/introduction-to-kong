@@ -18,7 +18,7 @@ author: Donald KANTI - OPEN SI
 # Découverte de Kong
 
 <div class="abs-tl m-10">
-  <img src="https://raw.githubusercontent.com/Kong/icons/main/svg/solid/kong.svg" class="h-10 brightness-0 invert" alt="Kong Logo" />
+  <img src="/images/kong.svg" class="h-10 brightness-0 invert" alt="Kong Logo" />
 </div>
 
 <div class="mt-4 text-xl opacity-90">
@@ -217,6 +217,65 @@ Identifie les demandeurs (utilisateurs, clients).
 Logique appliquée (Auth, Cache, Log).
 
 ---
+
+# 🌐 Orchestration Polyglotte
+
+Kong unifie l'architecture microservices, peu importe la stack technologique.
+
+<div class="relative mt-8">
+  <!-- Gateway Layer (Now Top) -->
+  <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 p-6 rounded-xl border border-white/10 shadow-2xl backdrop-blur relative z-10 mx-10 mb-8">
+    <div class="flex items-center justify-between px-8">
+      <div class="flex items-center gap-4">
+        <img src="/images/kong.svg" class="h-16 w-auto brightness-0 invert" />
+        <div class="text-left">
+          <div class="text-2xl font-bold">Kong API Gateway</div>
+          <div class="text-sm opacity-70">Unified Interface</div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <span class="px-2 py-1 bg-white/10 rounded text-xs">Auth</span>
+        <span class="px-2 py-1 bg-white/10 rounded text-xs">Rate Limit</span>
+        <span class="px-2 py-1 bg-white/10 rounded text-xs">Logging</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connection Lines -->
+  <div class="w-full flex justify-center text-gray-500/30 text-4xl mb-4">
+    ⬇️ ⬇️ ⬇️ ⬇️
+  </div>
+
+  <!-- Services Layer (Now Bottom) -->
+  <div class="grid grid-cols-4 gap-4">
+    <div class="flex flex-col items-center p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+      <logos-nodejs-icon class="text-4xl mb-2" />
+      <span class="font-bold text-green-400">User API</span>
+      <span class="text-xs opacity-60">Node.js</span>
+    </div>
+    <div class="flex flex-col items-center p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+      <logos-go class="text-4xl mb-2" />
+      <span class="font-bold text-blue-400">Billing</span>
+      <span class="text-xs opacity-60">Golang</span>
+    </div>
+    <div class="flex flex-col items-center p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+      <logos-python class="text-4xl mb-2" />
+      <span class="font-bold text-yellow-400">ML Engine</span>
+      <span class="text-xs opacity-60">Python</span>
+    </div>
+    <div class="flex flex-col items-center p-4 bg-red-500/10 rounded-lg border border-red-500/20">
+      <logos-java class="text-4xl mb-2" />
+      <span class="font-bold text-red-400">Legacy</span>
+      <span class="text-xs opacity-60">Java</span>
+    </div>
+  </div>
+  
+  <div class="text-center mt-6 opacity-60 text-sm">
+    Les services hétérogènes sont exposés via une façade unique.
+  </div>
+</div>
+
+---
 layout: center
 class: text-center
 ---
@@ -306,11 +365,75 @@ class: text-center
 
 ---
 
+# ⚡ Étude de Cas : Supabase
+
+<div class="grid grid-cols-2 gap-8 items-center">
+<div>
+
+**Supabase**, l'alternative Open Source à Firebase, utilise Kong comme **orchestrateur central**.
+
+### Le Rôle de Kong :
+- **Gateway Unifié :** Point d'entrée unique pour tous les services.
+- **Sécurité :** Gestion des JWT et ACL pour sécuriser l'accès aux données.
+- **Routage :** Dirige le trafic vers PostgREST, Realtime, Storage et Auth.
+
+</div>
+<div>
+  <div class="bg-black/40 p-6 rounded-xl border border-white/10 backdrop-blur-sm shadow-2xl">
+    <div class="flex flex-col items-center gap-4">
+      <div class="w-full text-center p-2 rounded bg-gray-700/50 text-gray-300 text-sm">Client (Web/Mobile)</div>
+      <div class="text-gray-500">⬇️ HTTPS</div>
+      <div class="w-full p-4 rounded bg-gradient-to-r from-green-900/40 to-green-600/20 border border-green-500/50 text-green-200 font-bold text-center shadow-lg shadow-green-900/30">
+        🦍 Kong API Gateway
+      </div>
+      <div class="grid grid-cols-3 gap-2 w-full">
+        <div class="p-2 rounded bg-blue-500/10 border border-blue-500/30 text-xs text-center text-blue-200">GoTrue<br>(Auth)</div>
+        <div class="p-2 rounded bg-purple-500/10 border border-purple-500/30 text-xs text-center text-purple-200">PostgREST<br>(API)</div>
+        <div class="p-2 rounded bg-yellow-500/10 border border-yellow-500/30 text-xs text-center text-yellow-200">Realtime<br>(WS)</div>
+      </div>
+      <div class="w-full p-3 rounded bg-indigo-600/20 border border-indigo-500/50 text-indigo-200 font-bold text-center">
+        🐘 PostgreSQL
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+---
+
 # Kong chez OPEN SI
 
 - **Standardisation :** Une seule passerelle pour toutes nos API.
 - **Sécurité Native :** Authentification centralisée.
 - **Performance :** Pas de goulot d'étranglement.
+
+---
+
+# 📚 Ressources & Liens
+
+Pour aller plus loin avec Kong :
+
+<div class="grid grid-cols-2 gap-6 mt-10">
+
+<a href="https://konghq.com/" target="_blank" class="block p-6 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 hover:from-cyan-500/30 hover:to-blue-600/30 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 group shadow-lg hover:shadow-cyan-500/20">
+  <div class="text-xl font-bold mb-3 flex items-center gap-3 text-cyan-300 group-hover:text-white transition-colors">
+    <div class="p-2 bg-cyan-500/20 rounded-lg group-hover:bg-cyan-500/40 transition-colors">🦍</div>
+    Site Officiel
+    <carbon:arrow-up-right class="text-sm opacity-50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"/>
+  </div>
+  <div class="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Documentation, version Enterprise, et Support.</div>
+</a>
+
+<a href="https://docs.konghq.com/hub/" target="_blank" class="block p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-600/10 hover:from-purple-500/30 hover:to-pink-600/30 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 group shadow-lg hover:shadow-purple-500/20">
+  <div class="text-xl font-bold mb-3 flex items-center gap-3 text-purple-300 group-hover:text-white transition-colors">
+    <div class="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/40 transition-colors">🧩</div>
+    Kong Plugin Hub
+    <carbon:arrow-up-right class="text-sm opacity-50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"/>
+  </div>
+  <div class="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Le catalogue complet des plugins officiels et communautaires.</div>
+</a>
+
+</div>
 
 ---
 
