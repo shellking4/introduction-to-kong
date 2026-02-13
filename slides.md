@@ -455,5 +455,5 @@ Des questions ?
 
 <div class="mt-8 text-sm opacity-60">
    Donald KANTI - OPEN SI<br>
-  <a href="mailto:donald.kanti@opensi.com" class="text-blue-500">donald.kanti@opensi.com</a>
+  <a href="mailto:donald.kanti@mehriso.com" class="text-blue-500">donald.kanti@mehriso.com</a>
 </div>
