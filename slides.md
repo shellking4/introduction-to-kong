@@ -13,6 +13,7 @@ drawings:
 transition: slide-left
 title: Découverte de Kong
 author: Donald KANTI - OPEN SI
+favicon: /favicon.png
 ---
 
 # Découverte de Kong
