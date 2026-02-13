@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kong API Gateway Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .slide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+        }
+
+        h4 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.5em;
+            color: #666;
+            margin-top: -10px;
+        }
+
+        .author {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.3em;
+            color: #764ba2;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding: 10px 0 10px 40px;
+            position: relative;
+        }
+
+        li:before {
+            content: "▸";
+            color: #667eea;
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1em;
+            line-height: 1.6;
+            border: 2px solid #667eea;
+            margin: 30px 0;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .keyword {
+            color: #569cd6;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1em;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #667eea;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-card h4 {
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+
+        .emoji {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+
+        .check-icon {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .cross-icon {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            padding-left: 60px;
+        }
+
+        .steps li:before {
+            content: counter(step-counter);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .comparison-table {
+            margin: 30px 0;
+        }
+
+        .star-rating {
+            color: #ffc107;
+            font-size: 0.9em;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 4em;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.8em;
+        }
+
+        .title-slide .author {
+            color: rgba(255,255,255,0.8);
+            margin-top: 80px;
+        }
+
+        .kong-logo {
+            font-size: 5em;
+            margin: 30px 0;
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .centered-text {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <div class="kong-logo">🦍</div>
+            <h1>Kong API Gateway</h1>
+            <p class="subtitle">The Cloud-Native API Gateway & Service Mesh</p>
+            <p class="author">Presented by Donald KANTI<br>OPEN SI - 2024</p>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h2>📋 Agenda</h2>
+            <ul class="steps">
+                <li>What is Kong & Why API Gateways?</li>
+                <li>Kong Architecture & Core Concepts</li>
+                <li>Key Features & Plugins</li>
+                <li>Deployment Models</li>
+                <li>Real-World Use Cases</li>
+                <li>Kong at OPEN SI</li>
+                <li>Live Demo</li>
+                <li>Best Practices & Q&A</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: What is Kong? -->
+        <div class="slide">
+            <h2>🦍 What is Kong?</h2>
+            
+            <div class="highlight-box">
+                <h3>Definition</h3>
+                <p>Kong is a <strong>cloud-native, platform-agnostic, scalable API Gateway</strong> distinguished for its high performance and extensibility via plugins.</p>
+            </div>
+
+            <h3>Technical Foundation</h3>
+            <ul>
+                <li>Built on <strong>Nginx</strong> and <strong>OpenResty</strong> (lua-nginx-module)</li>
+                <li>Written in <strong>Lua</strong> for high performance</li>
+                <li>Open-source with enterprise offerings</li>
+                <li>Cloud-native and Kubernetes-ready</li>
+            </ul>
+
+            <div class="success-box">
+                <strong>🎯 Key Value:</strong> Single entry point for all API traffic with centralized control for security, monitoring, and management.
+            </div>
+        </div>
+
+        <!-- Slide 4: The Problem -->
+        <div class="slide">
+            <h2>❌ The Problem Without API Gateway</h2>
+            
+            <div class="architecture-diagram">
+                <pre>
+    Client App          Client App          Client App
+         |                   |                   |
+         ▼                   ▼                   ▼
+    User Service       Order Service      Payment Service
+    - Auth ❌          - Auth ❌          - Auth ❌
+    - Rate Limit ❌    - Rate Limit ❌    - Rate Limit ❌
+    - Logging ❌       - Logging ❌       - Logging ❌
+    - CORS ❌          - CORS ❌          - CORS ❌
+                </pre>
+            </div>
+
+            <h3>Challenges:</h3>
+            <ul>
+                <li><strong>Duplicated Code:</strong> Each service implements its own security</li>
+                <li><strong>Inconsistent Policies:</strong> Different rate limits, auth methods</li>
+                <li><strong>Management Nightmare:</strong> Update 20 services for one policy change</li>
+                <li><strong>Security Risks:</strong> One misconfigured service = breach</li>
+                <li><strong>Poor Observability:</strong> Scattered logs across services</li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: The Solution -->
+        <div class="slide">
+            <h2>✅ The API Gateway Solution</h2>
+            
+            <div class="architecture-diagram">
+                <pre>
+    Client App          Client App          Client App
+         |                   |                   |
+         └───────────────────┴───────────────────┘
+                              |
+                    ┌─────────▼──────────┐
+                    │   KONG GATEWAY     │
+                    │  ✓ Authentication  │
+                    │  ✓ Rate Limiting   │
+                    │  ✓ Logging         │
+                    │  ✓ Caching         │
+                    │  ✓ Load Balancing  │
+                    └─────────┬──────────┘
+                              |
+         ┌────────────────────┼────────────────────┐
+         |                    |                    |
+         ▼                    ▼                    ▼
+    User Service       Order Service      Payment Service
+                </pre>
+            </div>
+
+            <h3>Benefits:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎯 Centralized</h4>
+                    <p>One place to configure all API policies</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔐 Secure</h4>
+                    <p>Consistent authentication & authorization</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚡ Fast</h4>
+                    <p>Caching, load balancing, rate limiting</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Observable</h4>
+                    <p>Unified logging & monitoring</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Kong Architecture -->
+        <div class="slide">
+            <h2>🏗️ Kong Architecture</h2>
+            
+            <div class="architecture-diagram">
+                <pre>
+                    ┌──────────────────────┐
+                    │   Admin API :8001    │ ← Configuration
+                    └──────────┬───────────┘
+                               |
+                    ┌──────────▼───────────┐
+                    │    Kong Core         │
+                    │  ┌────────────────┐  │
+                    │  │ Nginx/OpenResty│  │
+                    │  │   Lua Runtime  │  │
+                    │  └────────────────┘  │
+                    │  ┌────────────────┐  │
+                    │  │    Plugins     │  │
+                    │  │ (Auth, Logging,│  │
+                    │  │ Rate Limiting) │  │
+                    │  └────────────────┘  │
+                    └──────────┬───────────┘
+                               |
+                    ┌──────────▼───────────┐
+                    │  Database (Optional) │
+                    │  PostgreSQL/Cassandra│
+                    └──────────────────────┘
+                </pre>
+            </div>
+
+            <h3>Components:</h3>
+            <ul>
+                <li><strong>Proxy Port (8000):</strong> Handles incoming client traffic</li>
+                <li><strong>Admin API (8001):</strong> Configuration & management</li>
+                <li><strong>Database:</strong> Stores config (optional in DB-less mode)</li>
+                <li><strong>Plugin System:</strong> Extensible functionality</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Core Concepts - Services & Routes -->
+        <div class="slide">
+            <h2>🔧 Core Concepts: Services & Routes</h2>
+            
+            <h3>1️⃣ Service</h3>
+            <div class="highlight-box">
+                <p>A Service wraps properties of HTTP(s) endpoints that accomplish specific tasks, including upstream URLs for proxying requests.</p>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># Create a service</span>
+curl -i -X POST http://localhost:8001/services \
+  --data <span class="string">"name=user-service"</span> \
+  --data <span class="string">"url=http://user-api:8080"</span>
+            </div>
+
+            <h3>2️⃣ Route</h3>
+            <div class="highlight-box">
+                <p>Routes define how incoming requests map to services based on paths, headers, methods, etc.</p>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># Create a route for the service</span>
+curl -i -X POST http://localhost:8001/services/user-service/routes \
+  --data <span class="string">"paths[]=/api/users"</span> \
+  --data <span class="string">"methods[]=GET"</span> \
+  --data <span class="string">"methods[]=POST"</span>
+            </div>
+
+            <p class="centered-text"><strong>Now:</strong> http://kong:8000/api/users → http://user-api:8080/api/users</p>
+        </div>
+
+        <!-- Slide 8: Core Concepts - Consumers & Plugins -->
+        <div class="slide">
+            <h2>🔧 Core Concepts: Consumers & Plugins</h2>
+            
+            <h3>3️⃣ Consumer</h3>
+            <div class="highlight-box">
+                <p>Wraps properties of anyone using API endpoints. Used for tracking, access control, and rate limiting.</p>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># Create a consumer</span>
+curl -i -X POST http://localhost:8001/consumers \
+  --data <span class="string">"username=john_doe"</span>
+
+<span class="comment"># Add API key for consumer</span>
+curl -i -X POST http://localhost:8001/consumers/john_doe/key-auth \
+  --data <span class="string">"key=secret-api-key-123"</span>
+            </div>
+
+            <h3>4️⃣ Plugin</h3>
+            <div class="highlight-box">
+                <p>Pluggable features to enrich functionalities during request and response lifecycle.</p>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># Enable JWT authentication plugin</span>
+curl -X POST http://localhost:8001/services/user-service/plugins \
+  --data <span class="string">"name=jwt"</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: Plugin Ecosystem -->
+        <div class="slide">
+            <h2>🔌 Kong Plugin Ecosystem</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔐 Authentication</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>JWT</li>
+                        <li>OAuth 2.0</li>
+                        <li>API Key</li>
+                        <li>Basic Auth</li>
+                        <li>LDAP</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🛡️ Security</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>IP Restriction</li>
+                        <li>Bot Detection</li>
+                        <li>CORS</li>
+                        <li>ACL</li>
+                        <li>Request Validation</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>⚡ Traffic Control</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>Rate Limiting</li>
+                        <li>Request Size Limiting</li>
+                        <li>Response Rate Limiting</li>
+                        <li>Request Termination</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔄 Transformations</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>Request Transformer</li>
+                        <li>Response Transformer</li>
+                        <li>Correlation ID</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>📝 Logging</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>File Log</li>
+                        <li>HTTP Log</li>
+                        <li>Syslog</li>
+                        <li>TCP/UDP Log</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>📊 Analytics</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li>Prometheus</li>
+                        <li>Datadog</li>
+                        <li>StatsD</li>
+                        <li>Zipkin</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>50+ official plugins</strong> + custom plugins in Lua or Go
+            </div>
+        </div>
+
+        <!-- Slide 10: Deployment Models -->
+        <div class="slide">
+            <h2>🚀 Deployment Models</h2>
+            
+            <div class="two-column">
+                <div>
+                    <h3>1. Traditional Mode</h3>
+                    <div class="highlight-box">
+                        <p><strong>With Database</strong> (PostgreSQL/Cassandra)</p>
+                        <p>✅ Full feature set<br>
+                        ✅ Dynamic configuration<br>
+                        ✅ Admin API<br>
+                        ❌ Database dependency</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>2. DB-less Mode</h3>
+                    <div class="highlight-box">
+                        <p><strong>Declarative Config</strong> (YAML)</p>
+                        <p>✅ Lightweight & fast<br>
+                        ✅ GitOps-friendly<br>
+                        ✅ No DB needed<br>
+                        ❌ No runtime changes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># DB-less configuration example (kong.yml)</span>
+_format_version: <span class="string">"3.0"</span>
+services:
+  - name: user-service
+    url: http://user-api:8080
+    routes:
+      - name: user-route
+        paths:
+          - /api/users
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+            </div>
+        </div>
+
+        <!-- Slide 11: Deployment Models 2 -->
+        <div class="slide">
+            <h2>🚀 Deployment Models (cont.)</h2>
+            
+            <h3>3. Hybrid Mode (Control Plane / Data Plane)</h3>
+            <div class="architecture-diagram">
+                <pre>
+        ┌─────────────────────┐
+        │   Control Plane     │ ← Configuration Management
+        │   (with Database)   │
+        └──────────┬──────────┘
+                   │ Push config
+        ┌──────────┴──────────┐
+        |                     |
+   ┌────▼────┐          ┌────▼────┐
+   │  Data   │          │  Data   │ ← Handle Traffic
+   │  Plane  │          │  Plane  │
+   │ (no DB) │          │ (no DB) │
+   └─────────┘          └─────────┘
+                </pre>
+            </div>
+            <p><strong>Best for:</strong> Multi-region, high security, separation of concerns</p>
+
+            <h3>4. Kubernetes Native</h3>
+            <div class="highlight-box">
+                <p>Kong runs natively on Kubernetes with official <strong>Ingress Controller</strong></p>
+                <ul>
+                    <li>Manage Kong via Kubernetes manifests</li>
+                    <li>Auto-scaling with K8s</li>
+                    <li>Service mesh integration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12: Key Features - Authentication -->
+        <div class="slide">
+            <h2>🔐 Key Feature: Authentication</h2>
+            
+            <h3>Multiple Authentication Methods</h3>
+            <ul>
+                <li><strong>JWT:</strong> Token-based authentication</li>
+                <li><strong>OAuth 2.0:</strong> Third-party authorization</li>
+                <li><strong>API Key:</strong> Simple key-based access</li>
+                <li><strong>Basic Auth:</strong> Username/password</li>
+                <li><strong>LDAP:</strong> Enterprise directory integration</li>
+            </ul>
+
+            <h3>Example: Adding JWT Authentication</h3>
+            <div class="code-block">
+<span class="comment"># Step 1: Enable JWT plugin on service</span>
+curl -X POST http://localhost:8001/services/user-service/plugins \
+  --data <span class="string">"name=jwt"</span>
+
+<span class="comment"># Step 2: Create consumer with credentials</span>
+curl -X POST http://localhost:8001/consumers \
+  --data <span class="string">"username=mobile_app"</span>
+
+curl -X POST http://localhost:8001/consumers/mobile_app/jwt \
+  --data <span class="string">"key=my_jwt_key"</span> \
+  --data <span class="string">"secret=my_secret"</span>
+
+<span class="comment"># Step 3: Now all requests require valid JWT token!</span>
+            </div>
+        </div>
+
+        <!-- Slide 13: Key Features - Rate Limiting -->
+        <div class="slide">
+            <h2>⚡ Key Feature: Rate Limiting</h2>
+            
+            <h3>Protect Your APIs from Abuse</h3>
+            <div class="highlight-box">
+                <p>Kong can apply rate limiting rules by:</p>
+                <ul>
+                    <li>IP Address</li>
+                    <li>Consumer/API Key</li>
+                    <li>Service</li>
+                    <li>Header value</li>
+                </ul>
+            </div>
+
+            <h3>Example: 100 Requests per Minute</h3>
+            <div class="code-block">
+curl -X POST http://localhost:8001/services/user-service/plugins \
+  --data <span class="string">"name=rate-limiting"</span> \
+  --data <span class="string">"config.minute=100"</span> \
+  --data <span class="string">"config.hour=5000"</span> \
+  --data <span class="string">"config.policy=local"</span>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> When limit is exceeded, Kong returns HTTP 429 (Too Many Requests) with retry-after headers.
+            </div>
+
+            <h3>Advanced: Different Limits per Consumer Tier</h3>
+            <ul>
+                <li><strong>Free tier:</strong> 100 req/min</li>
+                <li><strong>Premium tier:</strong> 1000 req/min</li>
+                <li><strong>Enterprise tier:</strong> Unlimited</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Key Features - Load Balancing -->
+        <div class="slide">
+            <h2>⚖️ Key Feature: Load Balancing</h2>
+            
+            <h3>Distribute Traffic Across Multiple Instances</h3>
+            
+            <div class="architecture-diagram">
+                <pre>
+                Kong Gateway
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+    ┌───▼───┐    ┌───▼───┐    ┌───▼───┐
+    │ API-1 │    │ API-2 │    │ API-3 │
+    └───────┘    └───────┘    └───────┘
+                </pre>
+            </div>
+
+            <h3>Load Balancing Algorithms</h3>
+            <ul>
+                <li><strong>Round-robin:</strong> Distribute evenly</li>
+                <li><strong>Least connections:</strong> Send to least busy</li>
+                <li><strong>Weighted:</strong> Prioritize certain instances</li>
+                <li><strong>Consistent hashing:</strong> Sticky sessions</li>
+            </ul>
+
+            <div class="code-block">
+<span class="comment"># Create upstream with multiple targets</span>
+curl -X POST http://localhost:8001/upstreams \
+  --data <span class="string">"name=user-service-upstream"</span>
+
+curl -X POST http://localhost:8001/upstreams/user-service-upstream/targets \
+  --data <span class="string">"target=user-api-1:8080"</span> \
+  --data <span class="string">"weight=100"</span>
+
+curl -X POST http://localhost:8001/upstreams/user-service-upstream/targets \
+  --data <span class="string">"target=user-api-2:8080"</span> \
+  --data <span class="string">"weight=100"</span>
+            </div>
+
+            <div class="success-box">
+                <strong>Health Checks:</strong> Kong automatically removes unhealthy targets
+            </div>
+        </div>
+
+        <!-- Slide 15: Monitoring -->
+        <div class="slide">
+            <h2>📊 Key Feature: Monitoring & Observability</h2>
+            
+            <h3>Built-in Metrics & Integration</h3>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📈 Prometheus</h4>
+                    <p>Export metrics for scraping</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📉 Datadog</h4>
+                    <p>APM integration</p>
+                </div>
+                <div class="feature-car
